@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 enum TokenType {
@@ -42,4 +43,25 @@ constexpr const char* TokenNames[] = {
   "PRINT", "RETURN", "SUPER", "THIS", "TRUE", "VAR", "WHILE",
 
   "EOF"
+};
+
+typedef union {
+  const char *str;
+  double number;
+} Literal;
+
+struct Token {
+  TokenType type;
+  std::string lexeme;
+  std::unique_ptr<Literal> literal;
+  size_t line;
+
+  Token(TokenType type, std::string &&lexeme,
+      std::unique_ptr<Literal> literal, int line) :
+    type(type), lexeme(lexeme), literal(std::move(literal)), line(line) {}
+
+  Token(TokenType type, std::string &&lexeme, int line) :
+    type(type), lexeme(lexeme), literal(nullptr), line(line) {}
+
+  const std::string toString() const;
 };
