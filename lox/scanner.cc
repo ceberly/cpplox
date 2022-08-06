@@ -7,14 +7,15 @@ const std::vector<Token> &Scanner::scanTokens() {
     scanToken();
   }
 
-  tokens.push_back(Token(LOX_EOF, "", line));
+  tokens.push_back(Token(LOX_EOF, std::string_view(""),
+        std::move(EmptyLiteral), line));
 
   return tokens;
 }
 
-void Scanner::addToken(TokenType type, std::unique_ptr<Literal> literal) {
-  tokens.push_back(Token(type, source.substr(start, current),
-        std::move(literal), line));
+void Scanner::addToken(TokenType type, Literal &&literal) {
+  std::string_view s(source.data() + start, current - start);
+  tokens.push_back(Token(type, std::move(s), literal, line));
   return;
 }
 
@@ -104,8 +105,8 @@ void Scanner::string() {
 
   advance();
 
-  std::unique_ptr<Literal> literal(new Literal());
-  literal->str = source.substr(start + 1, current - 1).c_str();
+  Literal literal;
+  literal.str = source.substr(start + 1, current - 1).c_str();
 
   addToken(STRING, std::move(literal));
 }

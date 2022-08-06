@@ -1,4 +1,4 @@
-FLAGS=-std=c++11 -Wall -Werror -Wextra --pedantic -g -O2
+FLAGS=-std=c++17 -Wall -Werror -Wextra --pedantic -g -O2
 
 lox.o: lox.cc lox.h
 	clang++ ${FLAGS} -c lox.cc

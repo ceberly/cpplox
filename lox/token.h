@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 enum TokenType {
   // Single-character tokens.
@@ -46,22 +47,22 @@ constexpr const char* TokenNames[] = {
 };
 
 typedef union {
+  std::nullptr_t empty;
   const char *str;
   double number;
 } Literal;
 
+Literal EmptyLiteral = { nullptr };
+
 struct Token {
-  TokenType type;
-  std::string lexeme;
-  std::unique_ptr<Literal> literal;
+  Literal literal;
   size_t line;
+  std::string_view lexeme;
+  TokenType type;
 
-  Token(TokenType type, std::string &&lexeme,
-      std::unique_ptr<Literal> literal, int line) :
-    type(type), lexeme(lexeme), literal(std::move(literal)), line(line) {}
-
-  Token(TokenType type, std::string &&lexeme, int line) :
-    type(type), lexeme(lexeme), literal(nullptr), line(line) {}
+  Token(TokenType type, std::string_view &&lexeme,
+      Literal literal, size_t line) :
+    literal(literal), line(line), lexeme(lexeme), type(type) {}
 
   const std::string toString() const;
 };

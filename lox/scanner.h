@@ -16,8 +16,9 @@ class Scanner {
 
   bool isAtEnd() const { return current >= source.length(); }
   char advance() { return source[current++]; }
-  void addToken(TokenType, std::unique_ptr<Literal>);
-  void addToken(TokenType type) { return addToken(type, nullptr); }
+  void addToken(TokenType, Literal &&);
+  void addToken(TokenType type) {
+    return addToken(type, std::move(EmptyLiteral)); }
   void scanToken();
   bool match(const char expected);
   char peek() const { if (isAtEnd()) return '\0'; return source[current]; }
