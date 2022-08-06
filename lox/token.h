@@ -43,3 +43,21 @@ constexpr const char* TokenNames[] = {
 
   "EOF"
 };
+
+typedef union {
+  nullptr_t empty;
+  const char *str;
+  double number;
+} Literal;
+
+struct Token {
+  Literal literal;
+  size_t line;
+  const char *lexeme;
+  TokenType type;
+
+  Token(TokenType type, const char *lexeme, Literal literal, size_t line) :
+    literal(literal), line(line), lexeme(lexeme), type(type) {}
+
+  const std::string toString() const;
+};
