@@ -6,8 +6,11 @@
 #include "token.h"
 
 class Scanner {
+  public:
+    std::vector<Token> tokens;
+
+  private:
   const std::string source;
-  std::vector<Token> tokens;
 
   std::size_t start = 0;
   std::size_t current = 0;
@@ -17,7 +20,7 @@ class Scanner {
   char advance() { return source[current++]; }
   void addToken(TokenType, Literal &&);
   void addToken(TokenType type) {
-    return addToken(type, std::move(EmptyLiteral));
+    return addToken(type, Literal{nullptr});
   }
   void scanToken();
   bool match(const char expected);
@@ -35,7 +38,7 @@ class Scanner {
   void number();
   void identifier();
 
-  static bool isDigit(char c) { return c > '0' && c <= '9'; }
+  static bool isDigit(char c) { return c >= '0' && c <= '9'; }
   static bool isAlpha(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
   }

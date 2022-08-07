@@ -3,14 +3,11 @@ FLAGS=-std=c++17 -Wall -Werror -Wextra --pedantic -g -O2
 format:
 	clang-format -i *.cc && clang-format -i *.h
 
-lox.o: lox.cc lox.h
-	clang++ ${FLAGS} -c lox.cc
-
 token.o: token.cc token.h
 	clang++ ${FLAGS} -c token.cc
 
-scanner.o: scanner.cc scanner.h token.o
+scanner.o: scanner.cc scanner.h
 	clang++ ${FLAGS} -c scanner.cc
 
-lox: main.cc lox.o scanner.o
-	clang++ ${FLAGS} main.cc lox.o scanner.o -o lox
+lox: main.cc token.o scanner.o
+	clang++ ${FLAGS} lox.cc main.cc scanner.o token.o -o lox

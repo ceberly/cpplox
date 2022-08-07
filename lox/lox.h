@@ -4,13 +4,13 @@
 
 // this is kind of a singleton class that supports the Java "main" class
 // used in the book.
-struct Lox {
-  static bool hadError;
+namespace Lox {
+  static bool hadError = false;
 
-  static void report(int line, const std::string where,
+  void report(int line, const std::string where,
                      const std::string message);
-  static void error(int line, const std::string message);
-  static void run(const std::string line);
-  static int runFile(const char *file);
-  static int runPrompt();
-};
+  void error(int line, const std::string message);
+  void run(const std::string line);
+  int runFile(const char *file);
+  int runPrompt();
+}

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -74,11 +73,9 @@ constexpr const char *TokenNames[] = {
 
 typedef union {
   std::nullptr_t empty;
-  const char *str;
+  std::string_view str;
   double number;
 } Literal;
-
-Literal EmptyLiteral = {nullptr};
 
 struct Token {
   Literal literal;

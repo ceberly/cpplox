@@ -1,5 +1,28 @@
+#include <iostream>
+
 #include "scanner.h"
 #include "lox.h"
+
+#include <map>
+
+const static std::map<std::string, TokenType> keywords {
+  { "and", AND },
+  { "class", CLASS},
+  { "else", ELSE },
+  { "false", FALSE },
+  { "for", FOR },
+  { "fun", FUN },
+  { "if", IF },
+  { "nil", NIL },
+  { "or", OR },
+  { "print", PRINT },
+  { "return", RETURN },
+  { "super", SUPER },
+  { "this", THIS },
+  { "true", TRUE },
+  { "var", VAR },
+  { "while", WHILE },
+};
 
 const std::vector<Token> &Scanner::scanTokens() {
   while (!isAtEnd()) {
@@ -8,7 +31,7 @@ const std::vector<Token> &Scanner::scanTokens() {
   }
 
   tokens.push_back(
-      Token(LOX_EOF, std::string_view(""), std::move(EmptyLiteral), line));
+      Token(LOX_EOF, std::string_view(""), Literal{nullptr}, line));
 
   return tokens;
 }
@@ -122,8 +145,8 @@ void Scanner::string() {
 
   advance();
 
-  Literal literal;
-  literal.str = source.substr(start + 1, current - 1).c_str();
+  Literal literal{nullptr};
+  literal.str = std::string_view(source.data() + start + 1, current - 2 - start);
 
   addToken(STRING, std::move(literal));
 }
@@ -139,15 +162,21 @@ void Scanner::number() {
       advance();
   }
 
-  std::string s = source.substr(start, current - start);
-  Literal literal;
-  literal.number = std::stod(s);
+  Literal literal{nullptr};
+  literal.number = std::stod(source.substr(start, current - start));
 
   addToken(NUMBER, std::move(literal));
 }
+
 void Scanner::identifier() {
   while (Scanner::isAlphaNumeric(peek()))
     advance();
 
-  addToken(IDENTIFIER);
+  auto found = keywords.find(source.substr(start, current - start));
+  if (found == keywords.end()) {
+    addToken(IDENTIFIER);
+    return;
+  }
+
+  addToken(found->second);
 }
