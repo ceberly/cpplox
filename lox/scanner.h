@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <memory>
 #include <vector>
 
 #include "token.h"
@@ -18,17 +17,33 @@ class Scanner {
   char advance() { return source[current++]; }
   void addToken(TokenType, Literal &&);
   void addToken(TokenType type) {
-    return addToken(type, std::move(EmptyLiteral)); }
+    return addToken(type, std::move(EmptyLiteral));
+  }
   void scanToken();
   bool match(const char expected);
-  char peek() const { if (isAtEnd()) return '\0'; return source[current]; }
+  char peek() const {
+    if (isAtEnd())
+      return '\0';
+    return source[current];
+  }
+  char peekNext() const {
+    if (current + 1 >= source.length())
+      return '\0';
+    return source[current + 1];
+  }
   void string();
   void number();
+  void identifier();
 
   static bool isDigit(char c) { return c > '0' && c <= '9'; }
+  static bool isAlpha(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+  }
+  static bool isAlphaNumeric(char c) { return isAlpha(c) || isDigit(c); }
+
 public:
-  Scanner(std::string source): source(source) {}
-  Scanner (const Scanner &s) = delete;
+  Scanner(std::string source) : source(source) {}
+  Scanner(const Scanner &s) = delete;
   Scanner &operator=(const Scanner &s) = delete;
 
   const std::vector<Token> &scanTokens();

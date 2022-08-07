@@ -1,5 +1,8 @@
 FLAGS=-std=c++17 -Wall -Werror -Wextra --pedantic -g -O2
 
+format:
+	clang-format -i *.cc && clang-format -i *.h
+
 lox.o: lox.cc lox.h
 	clang++ ${FLAGS} -c lox.cc
 

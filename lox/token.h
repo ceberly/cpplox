@@ -1,50 +1,76 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 enum TokenType {
   // Single-character tokens.
-  LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
-  COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
+  LEFT_PAREN,
+  RIGHT_PAREN,
+  LEFT_BRACE,
+  RIGHT_BRACE,
+  COMMA,
+  DOT,
+  MINUS,
+  PLUS,
+  SEMICOLON,
+  SLASH,
+  STAR,
 
   // One or two character tokens.
-  BANG, BANG_EQUAL,
-  EQUAL, EQUAL_EQUAL,
-  GREATER, GREATER_EQUAL,
-  LESS, LESS_EQUAL,
+  BANG,
+  BANG_EQUAL,
+  EQUAL,
+  EQUAL_EQUAL,
+  GREATER,
+  GREATER_EQUAL,
+  LESS,
+  LESS_EQUAL,
 
   // Literals.
-  IDENTIFIER, STRING, NUMBER,
+  IDENTIFIER,
+  STRING,
+  NUMBER,
 
   // Keywords.
-  AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
-  PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
+  AND,
+  CLASS,
+  ELSE,
+  FALSE,
+  FUN,
+  FOR,
+  IF,
+  NIL,
+  OR,
+  PRINT,
+  RETURN,
+  SUPER,
+  THIS,
+  TRUE,
+  VAR,
+  WHILE,
 
   LOX_EOF
 };
 
-constexpr const char* TokenNames[] = {
-  // Single-character tokens.
-  "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACE", "RIGHT_BRACE",
-  "COMMA", "DOT", "MINUS", "PLUS", "SEMICOLON", "SLASH", "STAR",
+constexpr const char *TokenNames[] = {
+    // Single-character tokens.
+    "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACE", "RIGHT_BRACE", "COMMA", "DOT",
+    "MINUS", "PLUS", "SEMICOLON", "SLASH", "STAR",
 
-  // One or two character tokens.
-  "BANG", "BANG_EQUAL",
-  "EQUAL", "EQUAL_EQUAL",
-  "GREATER", "GREATER_EQUAL",
-  "LESS", "LESS_EQUAL",
+    // One or two character tokens.
+    "BANG", "BANG_EQUAL", "EQUAL", "EQUAL_EQUAL", "GREATER", "GREATER_EQUAL",
+    "LESS", "LESS_EQUAL",
 
-  // Literals.
-  "IDENTIFIER", "STRING", "NUMBER",
+    // Literals.
+    "IDENTIFIER", "STRING", "NUMBER",
 
-  // Keywords.
-  "AND", "CLASS", "ELSE", "FALSE", "FUN", "FOR", "IF", "NIL", "OR",
-  "PRINT", "RETURN", "SUPER", "THIS", "TRUE", "VAR", "WHILE",
+    // Keywords.
+    "AND", "CLASS", "ELSE", "FALSE", "FUN", "FOR", "IF", "NIL", "OR", "PRINT",
+    "RETURN", "SUPER", "THIS", "TRUE", "VAR", "WHILE",
 
-  "EOF"
-};
+    "EOF"};
 
 typedef union {
   std::nullptr_t empty;
@@ -52,7 +78,7 @@ typedef union {
   double number;
 } Literal;
 
-Literal EmptyLiteral = { nullptr };
+Literal EmptyLiteral = {nullptr};
 
 struct Token {
   Literal literal;
@@ -60,9 +86,8 @@ struct Token {
   std::string_view lexeme;
   TokenType type;
 
-  Token(TokenType type, std::string_view &&lexeme,
-      Literal literal, size_t line) :
-    literal(literal), line(line), lexeme(lexeme), type(type) {}
+  Token(TokenType type, std::string_view &&lexeme, Literal literal, size_t line)
+      : literal(literal), line(line), lexeme(lexeme), type(type) {}
 
   const std::string toString() const;
 };
