@@ -6,10 +6,10 @@
 #include "token.h"
 
 class Scanner {
-  public:
-    std::vector<Token> tokens;
+public:
+  std::vector<Token> tokens;
 
-  private:
+private:
   const std::string source;
 
   std::size_t start = 0;
@@ -18,10 +18,8 @@ class Scanner {
 
   bool isAtEnd() const { return current >= source.length(); }
   char advance() { return source[current++]; }
-  void addToken(TokenType, Literal &&);
-  void addToken(TokenType type) {
-    return addToken(type, Literal{nullptr});
-  }
+  void addToken(TokenType, Literal);
+  void addToken(TokenType type) { return addToken(type, Literal{nullptr}); }
   void scanToken();
   bool match(const char expected);
   char peek() const {

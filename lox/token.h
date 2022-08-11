@@ -83,7 +83,7 @@ struct Token {
   std::string_view lexeme;
   TokenType type;
 
-  Token(TokenType type, std::string_view &&lexeme, Literal literal, size_t line)
+  Token(TokenType type, std::string_view lexeme, Literal literal, size_t line)
       : literal(literal), line(line), lexeme(lexeme), type(type) {}
 
   const std::string toString() const;

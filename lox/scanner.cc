@@ -1,27 +1,15 @@
 #include <iostream>
 
-#include "scanner.h"
 #include "lox.h"
+#include "scanner.h"
 
-#include <map>
+#include <unordered_map>
 
-const static std::map<std::string, TokenType> keywords {
-  { "and", AND },
-  { "class", CLASS},
-  { "else", ELSE },
-  { "false", FALSE },
-  { "for", FOR },
-  { "fun", FUN },
-  { "if", IF },
-  { "nil", NIL },
-  { "or", OR },
-  { "print", PRINT },
-  { "return", RETURN },
-  { "super", SUPER },
-  { "this", THIS },
-  { "true", TRUE },
-  { "var", VAR },
-  { "while", WHILE },
+const static std::unordered_map<std::string, TokenType> keywords{
+    {"and", AND},   {"class", CLASS}, {"else", ELSE},     {"false", FALSE},
+    {"for", FOR},   {"fun", FUN},     {"if", IF},         {"nil", NIL},
+    {"or", OR},     {"print", PRINT}, {"return", RETURN}, {"super", SUPER},
+    {"this", THIS}, {"true", TRUE},   {"var", VAR},       {"while", WHILE},
 };
 
 const std::vector<Token> &Scanner::scanTokens() {
@@ -30,15 +18,14 @@ const std::vector<Token> &Scanner::scanTokens() {
     scanToken();
   }
 
-  tokens.push_back(
-      Token(LOX_EOF, std::string_view(""), Literal{nullptr}, line));
+  tokens.push_back({LOX_EOF, std::string_view(""), Literal{nullptr}, line});
 
   return tokens;
 }
 
-void Scanner::addToken(TokenType type, Literal &&literal) {
-  std::string_view s(source.data() + start, current - start);
-  tokens.push_back(Token(type, std::move(s), literal, line));
+void Scanner::addToken(TokenType type, Literal literal) {
+  tokens.push_back(
+      {type, {source.data() + start, current - start}, literal, line});
   return;
 }
 
@@ -146,7 +133,7 @@ void Scanner::string() {
   advance();
 
   Literal literal{nullptr};
-  literal.str = std::string_view(source.data() + start + 1, current - 2 - start);
+  literal.str = {source.data() + start + 1, current - 2 - start};
 
   addToken(STRING, std::move(literal));
 }
