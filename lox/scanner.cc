@@ -18,14 +18,16 @@ const std::vector<Token> &Scanner::scanTokens() {
     scanToken();
   }
 
-  tokens.push_back({LOX_EOF, std::string_view(""), Literal{nullptr}, line});
+  tokens.push_back({LOX_EOF, line, std::string_view(""), Literal(nullptr)});
 
   return tokens;
 }
 
-void Scanner::addToken(TokenType type, Literal literal) {
-  tokens.push_back(
-      {type, {source.data() + start, current - start}, literal, line});
+void Scanner::addToken(TokenType type, Literal &&literal) {
+  tokens.push_back({type, line,
+                    std::string_view(source.data() + start, current - start),
+                    std::move(literal)});
+
   return;
 }
 
@@ -132,10 +134,7 @@ void Scanner::string() {
 
   advance();
 
-  Literal literal{nullptr};
-  literal.str = {source.data() + start + 1, current - 2 - start};
-
-  addToken(STRING, std::move(literal));
+  addToken(STRING, Literal(source.substr(start + 1, current - 2 - start)));
 }
 
 void Scanner::number() {
@@ -149,19 +148,17 @@ void Scanner::number() {
       advance();
   }
 
-  Literal literal{nullptr};
-  literal.number = std::stod(source.substr(start, current - start));
-
-  addToken(NUMBER, std::move(literal));
+  addToken(NUMBER, Literal(std::stod(source.substr(start, current - start))));
 }
 
 void Scanner::identifier() {
   while (Scanner::isAlphaNumeric(peek()))
     advance();
 
-  auto found = keywords.find(source.substr(start, current - start));
+  std::string s = source.substr(start, current - start);
+  auto found = keywords.find(s);
   if (found == keywords.end()) {
-    addToken(IDENTIFIER);
+    addToken(IDENTIFIER, std::move(s));
     return;
   }
 

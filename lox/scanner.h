@@ -16,18 +16,20 @@ private:
   std::size_t current = 0;
   std::size_t line = 1;
 
-  bool isAtEnd() const { return current >= source.length(); }
-  char advance() { return source[current++]; }
-  void addToken(TokenType, Literal);
-  void addToken(TokenType type) { return addToken(type, Literal{nullptr}); }
+  constexpr bool isAtEnd() const { return current >= source.length(); }
+  constexpr char advance() { return source[current++]; }
+  void addToken(TokenType, Literal &&);
+  constexpr void addToken(TokenType type) {
+    return addToken(type, Literal(nullptr));
+  }
   void scanToken();
   bool match(const char expected);
-  char peek() const {
+  constexpr char peek() const {
     if (isAtEnd())
       return '\0';
     return source[current];
   }
-  char peekNext() const {
+  constexpr char peekNext() const {
     if (current + 1 >= source.length())
       return '\0';
     return source[current + 1];
@@ -36,11 +38,13 @@ private:
   void number();
   void identifier();
 
-  static bool isDigit(char c) { return c >= '0' && c <= '9'; }
-  static bool isAlpha(char c) {
+  static constexpr bool isDigit(char c) { return c >= '0' && c <= '9'; }
+  static constexpr bool isAlpha(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
   }
-  static bool isAlphaNumeric(char c) { return isAlpha(c) || isDigit(c); }
+  static constexpr bool isAlphaNumeric(char c) {
+    return isAlpha(c) || isDigit(c);
+  }
 
 public:
   Scanner(std::string source) : source(source) {}
