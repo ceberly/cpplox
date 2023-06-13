@@ -8,18 +8,14 @@
 
 static bool hadError = false;
 
-static void report(int line, const char *where, const char *message) {
-  hadError = true;
-
-  printf("[line %d] Error%s: %s\n", line, where, message);
-}
-
-static void error(int line, const char *message) { report(line, "", message); }
-
 void run(const char *source) {
   Scanner scanner(source);
 
   scanner.scanTokens();
+
+  if (scanner.hadError) {
+    hadError = true;
+  }
 
   for (auto &token : scanner.tokens) {
     std::cout << token.toString() << "\n";
