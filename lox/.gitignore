@@ -1,5 +1,0 @@
-*.obj
-*.pdb
-*.o
-lox
-expr_gen
