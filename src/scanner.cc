@@ -1,5 +1,6 @@
 #include "scanner.h"
 
+#include <charconv>
 #include <unordered_map>
 
 static const std::unordered_map<std::string_view, TokenType> keywords = {
@@ -62,7 +63,12 @@ void Scanner::number() {
       advance();
   }
 
-  addToken(NUMBER, 5.0);
+  auto substr = source.substr(start, current);
+  double result = 0;
+
+  std::from_chars(substr.data(), substr.data() + substr.length(), result);
+
+  addToken(NUMBER, result);
 }
 
 void Scanner::identifier() {
