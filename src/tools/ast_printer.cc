@@ -9,8 +9,7 @@
 template <typename T> struct AstPrinter {
   std::ostringstream out;
 
-  template<typename U>
-  void actuallyAccept(U expr) {
+  template <typename U> void actuallyAccept(U expr) {
     expr.template accept<decltype(AstPrinter<T>::actuallyAccept(expr))>(this);
   }
 
@@ -31,31 +30,27 @@ template <typename T> struct AstPrinter {
 
   inline void print(T expr) { return actuallyAccept(expr); }
 
-  template <typename L, typename R>
-  void visitBinaryExpr(Binary<L, R> *expr) {
+  template <typename L, typename R, typename LL>
+  void visitBinaryExpr(Binary<L, R, LL> *expr) {
     parenthesize(expr->op.lexeme, expr->left, expr->right);
   }
 
-  template <typename U>
-  void visitGroupingExpr(Grouping<U> *expr) {
+  template <typename U> void visitGroupingExpr(Grouping<U> *expr) {
     parenthesize("group", expr->expression);
   }
 
-  template <typename U>
-  void visitUnaryExpr(Unary<U> *expr) {
+  template <typename U, typename L> void visitUnaryExpr(Unary<U, L> *expr) {
     parenthesize(expr->op.lexeme, expr->right);
   }
 
-  void visitLiteralExpr(Literal *expr) {
-    out << "1.2";
+  template <typename L> void visitLiteralExpr(Literal<L> *expr) {
+    out << expr->value;
   }
-
 };
 
 int main() {
-  auto program =
-      Binary(Unary(Token(MINUS, "-", std::nullopt, 1), Literal(123.)),
-          Token(STAR, "*", std::nullopt, 1), Grouping(Literal(45.67)));
+  auto program = Binary(Unary(Token(MINUS, "-", nullptr, 1), Literal(123.)),
+                        Token(STAR, "*", nullptr, 1), Grouping(Literal(45.67)));
 
   AstPrinter<decltype(program)> printer;
 

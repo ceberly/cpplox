@@ -2,11 +2,11 @@
 
 #include <sstream>
 
-std::string Token::toString() {
+template <> std::string Token::toString() {
   std::ostringstream out;
 
-  out << TokenString[type] << " " << lexeme << " ";
-  std::visit([&out](const auto &x) { out << x; }, literal.value_or(""));
+  out << TokenString[type] << " " << lexeme << " " << literal;
+  // std::visit([&out](const auto &x) { out << x; }, literal.value_or(""));
 
   return out.str();
 }

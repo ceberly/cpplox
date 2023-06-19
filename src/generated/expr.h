@@ -3,33 +3,34 @@
 
 #include "../token.h"
 
-template<typename T>
+template<typename T, typename L>
 struct Unary {
-  Token op;
+  Token<L> op;
   T right;
 
-  Unary(Token op, T right) : op(op), right(right) {}
+  Unary(Token<L> op, T right) : op(op), right(right) {}
 
   template<typename U, typename V>
   U accept(V visitor) { return visitor->visitUnaryExpr(this); }
 };
 
-template<typename L, typename R>
+template<typename L, typename R, typename LL>
 struct Binary {
   L left;
-  Token op;
+  Token<LL> op;
   R right;
 
-  Binary(L left, Token op, R right) : left(left), op(op), right(right) {}
+  Binary(L left, Token<LL> op, R right) : left(left), op(op), right(right) {}
 
   template<typename T, typename V>
   T accept(V visitor) { return visitor->visitBinaryExpr(this); }
 };
 
+template<typename L>
 struct Literal {
-  Token::Literal value;
+  L value;
 
-  Literal(Token::Literal value) : value(value) {}
+  Literal(L value) : value(value) {}
 
   template<typename T, typename V>
   T accept(V visitor) { return visitor->visitLiteralExpr(this); }
