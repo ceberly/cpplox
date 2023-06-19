@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include <optional>
+#include <variant>
+
 enum TokenType {
   // Single-character tokens.
   LEFT_PAREN = 0,
@@ -70,13 +73,15 @@ static constexpr const char *TokenString[]{
 
     "IS_EOF"};
 
-template <typename L> struct Token {
+struct Token {
+  using Literal = std::optional<std::variant<double, std::string_view>>;
+
   const TokenType type;
   const std::string_view lexeme;
-  const L literal;
+  const Literal literal;
   const int line;
 
-  Token(const TokenType type, const std::string_view lexeme, L literal,
+  Token(const TokenType type, const std::string_view lexeme, Literal literal,
         const int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
 
