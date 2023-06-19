@@ -9,4 +9,7 @@ default:
 	g++ ${CFLAGS} ${SRC} -o lox
 
 format:
-	clang-format -i ${SRC} ${HEADERS}
+	clang-format -i ${SRC} ${HEADERS} src/tools/ast_printer.cc
+
+ast_printer: src/tools/ast_printer.cc src/generated/expr.h
+	g++ ${CFLAGS} src/tools/ast_printer.cc -o ast_printer
